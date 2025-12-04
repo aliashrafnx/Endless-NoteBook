@@ -1,5 +1,5 @@
 const $ = id => document.getElementById(id);
-const status = txt => { $('status').textContent = txt; };
+const status = txt => { $('status').innerHTML = txt; };
 
 const persianInput = $('persianInput');
 const translateBtn = $('translateBtn');
@@ -65,13 +65,24 @@ async function translateFaTo(lang, word){
 // ----- Button Click (translate & save) -----
 translateBtn.addEventListener('click', async () => {
   const w = persianInput.value.trim();
-  if(!w){ status('لطفا کلمه‌ای وارد کن'); return; }
-  status('دریافت ترجمه... (نیاز به اینترنت)');
+  if(!w){ 
+    status('لطفا کلمه‌ای وارد کن'); 
+    return; 
+  }
+
+  // Add spinning heart animation while loading
+  status('دریافت ترجمه... <span class="spin">💖</span>');
   translateBtn.disabled = true;
-  try{
+
+  try {
     const en = await translateFaTo('en', w);
     const fr = await translateFaTo('fr', w);
-    const wordObj = { persian: w, english: en || '(ترجمه یافت نشد)', french: fr || '(ترجمه یافت نشد)' };
+
+    const wordObj = {
+      persian: w, 
+      english: en || '(ترجمه یافت نشد)', 
+      french: fr || '(ترجمه یافت نشد)'
+    };
 
     const arr = loadWords();
     const found = arr.findIndex(x => x.persian === w);
@@ -82,10 +93,16 @@ translateBtn.addEventListener('click', async () => {
     renderList();
     status('ترجمه اضافه شد 💾');
     persianInput.value = '';
-  }catch(err){
+
+    // show ready after short delay
+    setTimeout(() => {
+      status('آماده — اولین کلمه را اضافه کن 💛');
+    }, 1200);
+
+  } catch(err) {
     console.error(err);
     status('خطا هنگام ترجمه — اتصال اینترنت را بررسی کنید');
-  }finally{
+  } finally {
     translateBtn.disabled = false;
   }
 });

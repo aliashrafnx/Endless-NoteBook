@@ -113,7 +113,14 @@ button:hover{
 .close{position:absolute;right:12px;top:12px;background:#fff;border-radius:8px;padding:6px;border:none}
 .big{font-size:24px;margin:6px 0}
 .modal-actions{display:flex;justify-content:flex-end;margin-top:12px}
-
+.spin {
+  display:inline-block;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0%{ transform:rotate(0deg); }
+  100%{ transform:rotate(360deg); }
+}
 /* animations */
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
