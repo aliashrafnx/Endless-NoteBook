@@ -1,45 +1,53 @@
-const $ = id => document.getElementById(id);
-const status = txt => { $('status').innerHTML = txt; };
+const $ = (id) => document.getElementById(id);
+const status = (txt) => {
+  $("status").innerHTML = txt;
+};
 
-const persianInput = $('persianInput');
-const translateBtn = $('translateBtn');
-const wordListEl = $('wordList');
+const persianInput = $("persianInput");
+const translateBtn = $("translateBtn");
+const wordListEl = $("wordList");
 
-const detailModal = $('detailModal');
-const closeModal = $('closeModal');
-const detailPersian = $('detailPersian');
-const detailEnglish = $('detailEnglish');
-const detailFrench = $('detailFrench');
-const playEn = $('playEn');
-const playFr = $('playFr');
-const deleteWordBtn = $('deleteWord');
+const detailModal = $("detailModal");
+const closeModal = $("closeModal");
+const detailPersian = $("detailPersian");
+const detailEnglish = $("detailEnglish");
+const detailFrench = $("detailFrench");
+const playEn = $("playEn");
+const playFr = $("playFr");
+const deleteWordBtn = $("deleteWord");
 
 let selectedIndex = null;
-const STORAGE_KEY = 'fa_vocab_words_v2';
+const STORAGE_KEY = "fa_vocab_words_v2";
 
 // ----- LocalStorage -----
-function loadWords(){
-  try{
+function loadWords() {
+  try {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : [];
-  }catch(e){ return []; }
+  } catch (e) {
+    return [];
+  }
 }
-function saveWords(arr){ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+function saveWords(arr) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+}
 
 // ----- Render List -----
-function renderList(){
+function renderList() {
   const list = loadWords();
-  wordListEl.innerHTML = '';
-  if(list.length === 0){
+  wordListEl.innerHTML = "";
+  if (list.length === 0) {
     wordListEl.innerHTML = `<li class="smallmuted">هنوز کلمه‌ای ذخیره نکردی — اولین کلمت رو اضافه کن </li>`;
     return;
   }
   list.forEach((item, idx) => {
-    const li = document.createElement('li');
+    const li = document.createElement("li");
     li.innerHTML = `
       <div class="word-left">
         <div class="persian">${escapeHtml(item.persian)}</div>
-        <div class="smallmuted">${escapeHtml(item.english)} · ${escapeHtml(item.french)}</div>
+        <div class="smallmuted">${escapeHtml(item.english)} · ${escapeHtml(
+      item.french
+    )}</div>
       </div>
       <div class="word-right">
         <button class="open-detail" data-idx="${idx}">جزئیات</button>
@@ -47,27 +55,35 @@ function renderList(){
     `;
     wordListEl.appendChild(li);
   });
-  document.querySelectorAll('.open-detail').forEach(btn => {
-    btn.addEventListener('click', () => openDetail(Number(btn.dataset.idx)));
+  document.querySelectorAll(".open-detail").forEach((btn) => {
+    btn.addEventListener("click", () => openDetail(Number(btn.dataset.idx)));
   });
 }
-function escapeHtml(s){ if(!s) return ''; return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+function escapeHtml(s) {
+  if (!s) return "";
+  return s
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
 
 // ----- Translation -----
-async function translateFaTo(lang, word){
-  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=fa|${lang}`;
+async function translateFaTo(lang, word) {
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(
+    word
+  )}&langpair=fa|${lang}`;
   const res = await fetch(url);
-  if(!res.ok) throw new Error('شبکه در دسترس نیست');
+  if (!res.ok) throw new Error("شبکه در دسترس نیست");
   const json = await res.json();
-  return json?.responseData?.translatedText || '';
+  return json?.responseData?.translatedText || "";
 }
 
 // ----- Button Click (translate & save) -----
-translateBtn.addEventListener('click', async () => {
+translateBtn.addEventListener("click", async () => {
   const w = persianInput.value.trim();
-  if(!w){ 
-    status('یه چیزی بنویس اول'); 
-    return; 
+  if (!w) {
+    status("یه چیزی بنویس اول");
+    return;
   }
 
   // Add spinning heart animation while loading
@@ -75,92 +91,96 @@ translateBtn.addEventListener('click', async () => {
   translateBtn.disabled = true;
 
   try {
-    const en = await translateFaTo('en', w);
-    const fr = await translateFaTo('fr', w);
+    const en = await translateFaTo("en", w);
+    const fr = await translateFaTo("fr", w);
 
     const wordObj = {
-      persian: w, 
-      english: en || '(ترجمه یافت نشد)', 
-      french: fr || '(ترجمه یافت نشد)'
+      persian: w,
+      english: en || "(ترجمه یافت نشد)",
+      french: fr || "(ترجمه یافت نشد)",
     };
 
     const arr = loadWords();
-    const found = arr.findIndex(x => x.persian === w);
-    if(found >=0) arr[found] = wordObj;
+    const found = arr.findIndex((x) => x.persian === w);
+    if (found >= 0) arr[found] = wordObj;
     else arr.push(wordObj);
     saveWords(arr);
 
     renderList();
-    status('ترجمت اضافه شد 💾');
-    persianInput.value = '';
+    status("ترجمت اضافه شد 💾");
+    persianInput.value = "";
 
     // show ready after short delay
     setTimeout(() => {
-      status('کلمه جدید رو اضافه کن');
+      status("کلمه جدید رو اضافه کن");
     }, 1200);
-
-  } catch(err) {
+  } catch (err) {
     console.error(err);
-    status('اینترنتت وصله؟🤨');
+    status("اینترنتت وصله؟🤨");
   } finally {
     translateBtn.disabled = false;
   }
 });
 
 // ----- Detail modal -----
-function openDetail(idx){
+function openDetail(idx) {
   const arr = loadWords();
   const item = arr[idx];
-  if(!item) return;
+  if (!item) return;
   selectedIndex = idx;
   detailPersian.textContent = item.persian;
   detailEnglish.textContent = item.english;
   detailFrench.textContent = item.french;
-  detailModal.classList.remove('hidden');
-  detailModal.classList.add('animate-pop');
-  detailModal.setAttribute('aria-hidden','false');
+  detailModal.classList.remove("hidden");
+  detailModal.classList.add("animate-pop");
+  detailModal.setAttribute("aria-hidden", "false");
 }
 
-closeModal.addEventListener('click', () => {
-  detailModal.classList.add('hidden');
-  detailModal.setAttribute('aria-hidden','true');
+closeModal.addEventListener("click", () => {
+  detailModal.classList.add("hidden");
+  detailModal.setAttribute("aria-hidden", "true");
   selectedIndex = null;
 });
 
-deleteWordBtn.addEventListener('click', () => {
-  if(selectedIndex === null) return;
-  if(!confirm('این کلمه حذف شود؟')) return;
+deleteWordBtn.addEventListener("click", () => {
+  if (selectedIndex === null) return;
+  if (!confirm("این کلمه حذف شود؟")) return;
   const arr = loadWords();
-  arr.splice(selectedIndex,1);
+  arr.splice(selectedIndex, 1);
   saveWords(arr);
   renderList();
   closeModal.click();
-  status('کلمه حذف شد');
+  status("کلمه حذف شد");
 });
 
 // ----- Text-to-Speech -----
-function speak(text, lang){
-  if(!('speechSynthesis' in window)){
-    alert('متأسفم.. این صدا نمتونه پخش بشه😔');
+function speak(text, lang) {
+  if (!("speechSynthesis" in window)) {
+    alert("متأسفم.. این صدا نمتونه پخش بشه😔");
     return;
   }
   const ut = new SpeechSynthesisUtterance(text);
   ut.lang = lang;
   const voices = speechSynthesis.getVoices();
-  if(voices && voices.length){
-    const v = voices.find(v => (v.lang || '').startsWith(lang));
-    if(v) ut.voice = v;
+  if (voices && voices.length) {
+    const v = voices.find((v) => (v.lang || "").startsWith(lang));
+    if (v) ut.voice = v;
   }
   speechSynthesis.cancel();
   speechSynthesis.speak(ut);
 }
-playEn.addEventListener('click', ()=>speak(detailEnglish.textContent,'en'));
-playFr.addEventListener('click', ()=>speak(detailFrench.textContent,'fr'));
+playEn.addEventListener("click", () => speak(detailEnglish.textContent, "en"));
+playFr.addEventListener("click", () => speak(detailFrench.textContent, "fr"));
 
 // enter key
-persianInput.addEventListener('keydown', e => { if(e.key==='Enter') translateBtn.click(); });
+persianInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") translateBtn.click();
+});
 
 // init
 renderList();
-status('کلمه رو اضافه کن');
-console.log('%cبرای تو: امیدوارم این هدیه لبخند بیاره 💛', 'font-size:14px;color:#ff6b9e;');
+status("کلمه رو اضافه کن");
+console.log(
+  "%cبرای تو: امیدوارم این هدیه لبخند بیاره 💛",
+  "font-size:14px;color:#ff6b9e;"
+);
