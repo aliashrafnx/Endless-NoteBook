@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>هدیه‌ی من — واژه‌نامه</title>
 
-  <!-- Persian font (Vazirmatn) -->
+  <!-- Persian font -->
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
@@ -24,14 +24,8 @@
       <label for="persianInput" class="label">کلمهٔ فارسی</label>
       <div class="row">
         <input id="persianInput" placeholder="مثلاً: سلام" autocomplete="off" />
-        <button id="translateBtn">🔍 ترجمه کن</button>
+        <button id="translateBtn">💛 ترجمه و ذخیره</button>
       </div>
-
-      <div class="row small">
-        <button id="saveBtn" class="secondary" disabled>💾 ذخیره (بعد از ترجمه)</button>
-        <button id="clearAll" class="secondary">🗑️ پاک کردن همه</button>
-      </div>
-
       <div id="status" class="status">آماده</div>
     </section>
 
@@ -47,7 +41,7 @@
 
   <!-- Detail modal -->
   <div id="detailModal" class="modal hidden" role="dialog" aria-hidden="true">
-    <div class="modal-card">
+    <div class="modal-card animate-pop">
       <button id="closeModal" class="close">✖</button>
       <h3 id="detailPersian" class="big"></h3>
       <p><strong>English:</strong> <span id="detailEnglish"></span>

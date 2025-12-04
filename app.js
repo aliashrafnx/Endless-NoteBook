@@ -1,18 +1,9 @@
-// app.js
-// Cute Persian→English/French dictionary web app
-// Uses MyMemory API for translation and LocalStorage for offline storage.
-// Author: generated for your gift
-
-// ----- Helpers -----
 const $ = id => document.getElementById(id);
 const status = txt => { $('status').textContent = txt; };
 
-// ----- Elements -----
 const persianInput = $('persianInput');
 const translateBtn = $('translateBtn');
-const saveBtn = $('saveBtn');
 const wordListEl = $('wordList');
-const clearAllBtn = $('clearAll');
 
 const detailModal = $('detailModal');
 const closeModal = $('closeModal');
@@ -23,27 +14,19 @@ const playEn = $('playEn');
 const playFr = $('playFr');
 const deleteWordBtn = $('deleteWord');
 
-let currentTranslate = null;   // { persian, english, french }
-let selectedIndex = null;      // index in saved array
+let selectedIndex = null;
+const STORAGE_KEY = 'fa_vocab_words_v2';
 
-// ----- LocalStorage keys -----
-const STORAGE_KEY = 'fa_vocab_words_v1';
-
-// ----- Load saved words -----
+// ----- LocalStorage -----
 function loadWords(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : [];
-  }catch(e){
-    return [];
-  }
+  }catch(e){ return []; }
 }
+function saveWords(arr){ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
 
-function saveWords(arr){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
-}
-
-// ----- Render list -----
+// ----- Render List -----
 function renderList(){
   const list = loadWords();
   wordListEl.innerHTML = '';
@@ -64,77 +47,47 @@ function renderList(){
     `;
     wordListEl.appendChild(li);
   });
-  // attach click
   document.querySelectorAll('.open-detail').forEach(btn => {
-    btn.addEventListener('click', e => {
-      const idx = Number(btn.dataset.idx);
-      openDetail(idx);
-    });
+    btn.addEventListener('click', () => openDetail(Number(btn.dataset.idx)));
   });
 }
+function escapeHtml(s){ if(!s) return ''; return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
 
-// simple escape to avoid injection
-function escapeHtml(s){
-  if(!s) return '';
-  return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
-}
-
-// ----- Translation (MyMemory) -----
+// ----- Translation -----
 async function translateFaTo(lang, word){
-  // lang: 'en' or 'fr'
   const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=fa|${lang}`;
   const res = await fetch(url);
   if(!res.ok) throw new Error('شبکه در دسترس نیست');
   const json = await res.json();
-  // safety: try responseData.translatedText else fallback to response
-  const text = json?.responseData?.translatedText || '';
-  return text;
+  return json?.responseData?.translatedText || '';
 }
 
-// ----- UI Actions -----
+// ----- Button Click (translate & save) -----
 translateBtn.addEventListener('click', async () => {
   const w = persianInput.value.trim();
   if(!w){ status('لطفا کلمه‌ای وارد کن'); return; }
   status('دریافت ترجمه... (نیاز به اینترنت)');
   translateBtn.disabled = true;
-  saveBtn.disabled = true;
   try{
     const en = await translateFaTo('en', w);
     const fr = await translateFaTo('fr', w);
-    currentTranslate = { persian: w, english: en || '(ترجمه یافت نشد)', french: fr || '(ترجمه یافت نشد)' };
-    status('ترجمه آماده شد — می‌تونی ذخیره کنی ✔');
-    saveBtn.disabled = false;
+    const wordObj = { persian: w, english: en || '(ترجمه یافت نشد)', french: fr || '(ترجمه یافت نشد)' };
+
+    const arr = loadWords();
+    const found = arr.findIndex(x => x.persian === w);
+    if(found >=0) arr[found] = wordObj;
+    else arr.push(wordObj);
+    saveWords(arr);
+
+    renderList();
+    status('ترجمه اضافه شد 💾');
+    persianInput.value = '';
   }catch(err){
     console.error(err);
     status('خطا هنگام ترجمه — اتصال اینترنت را بررسی کنید');
   }finally{
     translateBtn.disabled = false;
   }
-});
-
-saveBtn.addEventListener('click', () => {
-  if(!currentTranslate){ status('هیچ ترجمه‌ای برای ذخیره وجود ندارد'); return; }
-  const arr = loadWords();
-  // prevent duplicate persian words (replace if exists)
-  const found = arr.findIndex(x => x.persian === currentTranslate.persian);
-  if(found >= 0){
-    arr[found] = currentTranslate;
-  }else{
-    arr.push(currentTranslate);
-  }
-  saveWords(arr);
-  renderList();
-  status('ذخیره شد 💾');
-  persianInput.value = '';
-  saveBtn.disabled = true;
-  currentTranslate = null;
-});
-
-clearAllBtn.addEventListener('click', () => {
-  if(!confirm('همهٔ واژگان حذف شوند؟ این عمل قابل بازگشت نیست.')) return;
-  saveWords([]);
-  renderList();
-  status('همهٔ واژگان پاک شدند');
 });
 
 // ----- Detail modal -----
@@ -147,6 +100,7 @@ function openDetail(idx){
   detailEnglish.textContent = item.english;
   detailFrench.textContent = item.french;
   detailModal.classList.remove('hidden');
+  detailModal.classList.add('animate-pop');
   detailModal.setAttribute('aria-hidden','false');
 }
 
@@ -175,7 +129,6 @@ function speak(text, lang){
   }
   const ut = new SpeechSynthesisUtterance(text);
   ut.lang = lang;
-  // choose a voice if available matching the lang
   const voices = speechSynthesis.getVoices();
   if(voices && voices.length){
     const v = voices.find(v => (v.lang || '').startsWith(lang));
@@ -184,18 +137,13 @@ function speak(text, lang){
   speechSynthesis.cancel();
   speechSynthesis.speak(ut);
 }
+playEn.addEventListener('click', ()=>speak(detailEnglish.textContent,'en'));
+playFr.addEventListener('click', ()=>speak(detailFrench.textContent,'fr'));
 
-playEn.addEventListener('click', () => speak(detailEnglish.textContent || '', 'en'));
-playFr.addEventListener('click', () => speak(detailFrench.textContent || '', 'fr'));
+// enter key
+persianInput.addEventListener('keydown', e => { if(e.key==='Enter') translateBtn.click(); });
 
-// open on enter key
-persianInput.addEventListener('keydown', (e) => {
-  if(e.key === 'Enter') translateBtn.click();
-});
-
-// initial
+// init
 renderList();
 status('آماده — اولین کلمه را اضافه کن 💛');
-
-// show a sweet welcome message in console (for fun)
 console.log('%cبرای تو: امیدوارم این هدیه لبخند بیاره 💛', 'font-size:14px;color:#ff6b9e;');
