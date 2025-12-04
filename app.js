@@ -183,7 +183,7 @@ function spawnKisses(num=5){
     kiss.className = 'kiss';
     kiss.style.left = Math.random() * window.innerWidth + 'px';
     kiss.style.bottom = '0px';
-    kiss.textContent = '💋';
+    kiss.textContent = '😘';
     document.body.appendChild(kiss);
 
     // Remove after animation

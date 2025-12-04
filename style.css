@@ -230,7 +230,7 @@ button:hover {
 
 .kiss {
   position: absolute;
-  font-size: 24px;
+  font-size: 30px;
   animation: floatKiss 2s ease-out forwards;
   pointer-events: none;
 }
