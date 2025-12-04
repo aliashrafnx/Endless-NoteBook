@@ -31,7 +31,7 @@ function renderList(){
   const list = loadWords();
   wordListEl.innerHTML = '';
   if(list.length === 0){
-    wordListEl.innerHTML = `<li class="smallmuted">هنوز کلمه‌ای ذخیره نشده — اولین کلمه را اضافه کن 💛</li>`;
+    wordListEl.innerHTML = `<li class="smallmuted">هنوز کلمه‌ای ذخیره نکردی — اولین کلمت رو اضافه کن </li>`;
     return;
   }
   list.forEach((item, idx) => {
@@ -66,12 +66,12 @@ async function translateFaTo(lang, word){
 translateBtn.addEventListener('click', async () => {
   const w = persianInput.value.trim();
   if(!w){ 
-    status('لطفا کلمه‌ای وارد کن'); 
+    status('یه چیزی بنویس اول'); 
     return; 
   }
 
   // Add spinning heart animation while loading
-  status('دریافت ترجمه... <span class="spin">💖</span>');
+  status('دریافت ترجمه... <span class="spin">🤔</span>');
   translateBtn.disabled = true;
 
   try {
@@ -91,17 +91,17 @@ translateBtn.addEventListener('click', async () => {
     saveWords(arr);
 
     renderList();
-    status('ترجمه اضافه شد 💾');
+    status('ترجمت اضافه شد 💾');
     persianInput.value = '';
 
     // show ready after short delay
     setTimeout(() => {
-      status('آماده — اولین کلمه را اضافه کن 💛');
+      status('کلمه جدید رو اضافه کن');
     }, 1200);
 
   } catch(err) {
     console.error(err);
-    status('خطا هنگام ترجمه — اتصال اینترنت را بررسی کنید');
+    status('اینترنتت وصله؟🤨');
   } finally {
     translateBtn.disabled = false;
   }
@@ -141,7 +141,7 @@ deleteWordBtn.addEventListener('click', () => {
 // ----- Text-to-Speech -----
 function speak(text, lang){
   if(!('speechSynthesis' in window)){
-    alert('متأسفم، مرورگر شما از TTS پشتیبانی نمی‌کند.');
+    alert('متأسفم.. این صدا نمتونه پخش بشه😔');
     return;
   }
   const ut = new SpeechSynthesisUtterance(text);
@@ -162,5 +162,5 @@ persianInput.addEventListener('keydown', e => { if(e.key==='Enter') translateBtn
 
 // init
 renderList();
-status('آماده — اولین کلمه را اضافه کن 💛');
+status('کلمه رو اضافه کن');
 console.log('%cبرای تو: امیدوارم این هدیه لبخند بیاره 💛', 'font-size:14px;color:#ff6b9e;');
