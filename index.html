@@ -1,63 +1,70 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Endless-NoteBook</title>
- <link rel="icon" type="image/png" sizes="32x32" href="icon.png">
-<link rel="icon" type="image/png" sizes="16x16" href="icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="icon.png">
-  <!-- Persian font -->
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Endless-NoteBook</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="icon.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="icon.png" />
+    <!-- Persian font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
 
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <main class="app">
-    <header class="top-card">
-      <div class="greeting">
-        <h1>برای سارا</h1>
-        <p class="subtitle">هر کلمه ای خواستی اضافه کن خوشگله </p>
-      </div>
-      <div class="heart">😏</div>
-    </header>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="top-card">
+        <div class="greeting">
+          <h1>برای سارا</h1>
+          <p class="subtitle">هر کلمه ای خواستی اضافه کن خوشگله</p>
+        </div>
+        <div class="heart">😏</div>
+      </header>
 
-    <section class="input-card">
-      <label for="persianInput" class="label">کلمهٔ فارسی</label>
-      <div class="row">
-        <input id="persianInput" placeholder="مثلاً: سلام" autocomplete="off" />
-        <button id="translateBtn">😈 ترجمه و ذخیره</button>
-      </div>
-      <div id="status" class="status">آماده</div>
-    </section>
+      <section class="input-card">
+        <label for="persianInput" class="label">کلمهٔ فارسی</label>
+        <div class="row">
+          <input
+            id="persianInput"
+            placeholder="مثلاً: سلام"
+            autocomplete="off"
+          />
+          <button id="translateBtn">ترجمه 😈</button>
+        </div>
+        <div id="status" class="status">آماده</div>
+      </section>
 
-    <section class="list-card">
-      <h2>واژگان ذخیره‌شده</h2>
-      <ul id="wordList" class="word-list"></ul>
-    </section>
+      <section class="list-card">
+        <h2>واژگان ذخیره‌شده</h2>
+        <ul id="wordList" class="word-list"></ul>
+      </section>
 
-    <footer class="footer">
-      
-    </footer>
-  </main>
+      <footer class="footer"></footer>
+    </main>
 
-  <!-- Detail modal -->
-  <div id="detailModal" class="modal hidden" role="dialog" aria-hidden="true">
-    <div class="modal-card animate-pop">
-      <button id="closeModal" class="close">✖</button>
-      <h3 id="detailPersian" class="big"></h3>
-      <p><strong>English:</strong> <span id="detailEnglish"></span>
-        <button id="playEn" class="play">🔊</button>
-      </p>
-      <p><strong>Français:</strong> <span id="detailFrench"></span>
-        <button id="playFr" class="play">🔊</button>
-      </p>
-      <div class="modal-actions">
-        <button id="deleteWord" class="danger">حذف این کلمه</button>
+    <!-- Detail modal -->
+    <div id="detailModal" class="modal hidden" role="dialog" aria-hidden="true">
+      <div class="modal-card animate-pop">
+        <button id="closeModal" class="close">✖</button>
+        <h3 id="detailPersian" class="big"></h3>
+        <p>
+          <strong>English:</strong> <span id="detailEnglish"></span>
+          <button id="playEn" class="play">🔊</button>
+        </p>
+        <p>
+          <strong>Français:</strong> <span id="detailFrench"></span>
+          <button id="playFr" class="play">🔊</button>
+        </p>
+        <div class="modal-actions">
+          <button id="deleteWord" class="danger">حذف این کلمه</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script src="app.js"></script>
-</body>
+    <script src="app.js"></script>
+  </body>
 </html>
