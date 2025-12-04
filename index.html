@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fa">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>هدیه‌ی من — واژه‌نامه</title>
+
+  <!-- Persian font (Vazirmatn) -->
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="top-card">
+      <div class="greeting">
+        <h1>برای تو 💛</h1>
+        <p class="subtitle">یک دیکشنری کوچک که من برات ساختم — هر کلمه رو اضافه کن، ترجمه‌ها آنلاین گرفته میشه و همیشه آفلاین نگه داشته میشه.</p>
+      </div>
+      <div class="heart">🌸</div>
+    </header>
+
+    <section class="input-card">
+      <label for="persianInput" class="label">کلمهٔ فارسی</label>
+      <div class="row">
+        <input id="persianInput" placeholder="مثلاً: سلام" autocomplete="off" />
+        <button id="translateBtn">🔍 ترجمه کن</button>
+      </div>
+
+      <div class="row small">
+        <button id="saveBtn" class="secondary" disabled>💾 ذخیره (بعد از ترجمه)</button>
+        <button id="clearAll" class="secondary">🗑️ پاک کردن همه</button>
+      </div>
+
+      <div id="status" class="status">آماده</div>
+    </section>
+
+    <section class="list-card">
+      <h2>واژگان ذخیره‌شده</h2>
+      <ul id="wordList" class="word-list"></ul>
+    </section>
+
+    <footer class="footer">
+      <small>هدیه برای تو — ساخته شده با ❤️</small>
+    </footer>
+  </main>
+
+  <!-- Detail modal -->
+  <div id="detailModal" class="modal hidden" role="dialog" aria-hidden="true">
+    <div class="modal-card">
+      <button id="closeModal" class="close">✖</button>
+      <h3 id="detailPersian" class="big"></h3>
+      <p><strong>English:</strong> <span id="detailEnglish"></span>
+        <button id="playEn" class="play">🔊</button>
+      </p>
+      <p><strong>Français:</strong> <span id="detailFrench"></span>
+        <button id="playFr" class="play">🔊</button>
+      </p>
+      <div class="modal-actions">
+        <button id="deleteWord" class="danger">حذف این کلمه</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
