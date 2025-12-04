@@ -177,23 +177,42 @@ persianInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") translateBtn.click();
 });
 
-function spawnKisses(num=5){
-  for(let i=0; i<num; i++){
-    const kiss = document.createElement('span');
-    kiss.className = 'kiss';
-    kiss.style.left = Math.random() * window.innerWidth + 'px';
-    kiss.style.bottom = '0px';
-    kiss.textContent = '😘';
+function spawnKisses(num = 7) {
+  for (let i = 0; i < num; i++) {
+    const kiss = document.createElement("span");
+    kiss.className = "kiss";
+    kiss.textContent = "💋";
+
+    // Random horizontal position
+    kiss.style.left = Math.random() * window.innerWidth + "px";
+
+    // Random size (16px - 48px)
+    kiss.style.fontSize = 16 + Math.random() * 32 + "px";
+
+    // Random rotation start
+    kiss.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+    // Random animation duration (2s - 4s)
+    const duration = 2 + Math.random() * 2;
+    kiss.style.animationDuration = duration + "s";
+
+    // Random horizontal offset via keyframe variation
+    const xOffset = Math.random() * 100 - 50; // -50px to +50px
+    kiss.style.setProperty("--xOffset", xOffset + "px");
+
+    // Random animation delay
+    kiss.style.animationDelay = Math.random() * 0.5 + "s";
+
+    // Apply a small variation in the trajectory via transform in keyframes
+    kiss.style.animationName = "floatKissRandom";
+
     document.body.appendChild(kiss);
 
     // Remove after animation
-    setTimeout(() => kiss.remove(), 2000);
+    setTimeout(() => kiss.remove(), duration * 1000 + 500);
   }
 }
 
-window.addEventListener('load', () => {
-  spawnKisses(7); // spawn 7 kisses on load
-});
 // init
 renderList();
 status("کلمه رو اضافه کن");
