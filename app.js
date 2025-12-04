@@ -177,6 +177,23 @@ persianInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") translateBtn.click();
 });
 
+function spawnKisses(num=5){
+  for(let i=0; i<num; i++){
+    const kiss = document.createElement('span');
+    kiss.className = 'kiss';
+    kiss.style.left = Math.random() * window.innerWidth + 'px';
+    kiss.style.bottom = '0px';
+    kiss.textContent = '💋';
+    document.body.appendChild(kiss);
+
+    // Remove after animation
+    setTimeout(() => kiss.remove(), 2000);
+  }
+}
+
+window.addEventListener('load', () => {
+  spawnKisses(7); // spawn 7 kisses on load
+});
 // init
 renderList();
 status("کلمه رو اضافه کن");
