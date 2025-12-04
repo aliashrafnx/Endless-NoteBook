@@ -1,7 +1,7 @@
 :root {
   --bg: #fffafc;
   --card: #ffffff;
-  --muted: #8b8b95;
+  --muted: #f888e5;
   --accent: #ff8fb1;
   --accent-2: #9ad7ff;
   --shadow: rgba(11, 10, 20, 0.06);
@@ -31,7 +31,7 @@ body {
 body {
   margin: 0;
   background: linear-gradient(180deg, var(--bg) 0%, #f6f9ff 100%);
-  color: #222;
+  color: #1ea0e6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   padding: 20px;
