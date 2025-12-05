@@ -176,43 +176,42 @@ playFr.addEventListener("click", () => speak(detailFrench.textContent, "fr"));
 persianInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") translateBtn.click();
 });
-
 function spawnKisses(num = 7) {
   for (let i = 0; i < num; i++) {
     const kiss = document.createElement("span");
     kiss.className = "kiss";
-    kiss.textContent = "💋";
+    kiss.textContent = "❤";
 
-    // Random horizontal position
+    // random horizontal start
     kiss.style.left = Math.random() * window.innerWidth + "px";
+    kiss.style.bottom = "-20px";
 
-    // Random size (16px - 48px)
-    kiss.style.fontSize = 16 + Math.random() * 32 + "px";
+    // random size (20–50px)
+    kiss.style.fontSize = 20 + Math.random() * 30 + "px";
 
-    // Random rotation start
-    kiss.style.transform = `rotate(${Math.random() * 360}deg)`;
+    // random offset in x direction
+    kiss.style.setProperty("--xOffset", Math.random() * 200 - 100 + "px");
 
-    // Random animation duration (2s - 4s)
-    const duration = 2 + Math.random() * 2;
+    // random duration (1.8–4s)
+    const duration = 1.8 + Math.random() * 2.2;
     kiss.style.animationDuration = duration + "s";
 
-    // Random horizontal offset via keyframe variation
-    const xOffset = Math.random() * 100 - 50; // -50px to +50px
-    kiss.style.setProperty("--xOffset", xOffset + "px");
+    // random delay (0–0.8s)
+    kiss.style.animationDelay = Math.random() * 0.8 + "s";
 
-    // Random animation delay
-    kiss.style.animationDelay = Math.random() * 0.5 + "s";
-
-    // Apply a small variation in the trajectory via transform in keyframes
+    // Set animation name
     kiss.style.animationName = "floatKissRandom";
 
     document.body.appendChild(kiss);
 
-    // Remove after animation
-    setTimeout(() => kiss.remove(), duration * 1000 + 500);
+    // remove after animation ends
+    setTimeout(() => kiss.remove(), duration * 1000 + 1000);
   }
 }
 
+window.addEventListener("load", () => {
+  spawnKisses(12); // more kisses = more love 💋
+});
 // init
 renderList();
 status("کلمه رو اضافه کن");
