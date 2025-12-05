@@ -2,7 +2,7 @@
   --bg: #fffafc;
   --card: #ffffff;
   --muted: #0ba2e8;
-  --accent: #03bbcc;
+  --accent: #14ebff;
   --accent-2: #9ad7ff;
   --shadow: rgba(11, 10, 20, 0.06);
   font-family: "Vazirmatn", system-ui, -apple-system, "Segoe UI", Roboto,
@@ -45,7 +45,9 @@ body {
   max-width: 780px;
   animation: fadeIn 1s ease;
 }
-
+.strong-class {
+  color: #0ba2e8;
+}
 .top-card {
   display: flex;
   align-items: center;
